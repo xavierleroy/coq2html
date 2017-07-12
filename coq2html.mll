@@ -482,7 +482,7 @@ let _ =
   Arg.parse (Arg.align [
     "-base", Arg.String (fun s -> logical_name_base := s ^ "."),
       "<coqdir>  Set the name space for the modules being processed";
-    "-coqlib", Arg.String (fun s -> add_documentation_url "Coq." s),
+    "-coqlib", Arg.String (fun s -> add_documentation_url "Coq" s),
       "<url>   Set base URL for Coq standard library";
     "-d", Arg.Set_string output_dir,
       "<dir>   Output files to directory <dir> (default: current directory)";
@@ -490,7 +490,7 @@ let _ =
       (let x = ref "" in
        Arg.Tuple [
          Arg.Set_string x;
-         Arg.String (fun y -> add_documentation_url (y ^ ".") !x)
+         Arg.String (fun y -> add_documentation_url y !x)
        ]),
       "<url> <coqdir> Set base URL for linking references whose names start with <coqdir>";
     "-no-css", Arg.Clear generate_css,

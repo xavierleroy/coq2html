@@ -26,4 +26,5 @@ PREFIX=/usr/local
 BINDIR=$(PREFIX)/bin
 
 install:
-	install coq2html $(BINDIR)
+	install coq2html $(BINDIR)/coq2html
+
