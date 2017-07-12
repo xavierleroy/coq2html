@@ -1,15 +1,14 @@
 (* *********************************************************************)
 (*                                                                     *)
-(*              The Compcert verified compiler                         *)
+(*              The Coq2HTML documentation generator                   *)
 (*                                                                     *)
-(*          Xavier Leroy, INRIA Paris-Rocquencourt                     *)
+(*                   Xavier Leroy, INRIA Paris                         *)
 (*                                                                     *)
 (*  Copyright Institut National de Recherche en Informatique et en     *)
 (*  Automatique.  All rights reserved.  This file is distributed       *)
 (*  under the terms of the GNU General Public License as published by  *)
 (*  the Free Software Foundation, either version 2 of the License, or  *)
-(*  (at your option) any later version.  This file is also distributed *)
-(*  under the terms of the INRIA Non-Commercial License Agreement.     *)
+(*  (at your option) any later version.                                *)
 (*                                                                     *)
 (* *********************************************************************)
 
@@ -40,11 +39,11 @@ let path sp id =
   | _   , _    -> sp ^ "." ^ id
 
 let add_module m =
-  eprintf "add_module %s\n" m;
+  (*eprintf "add_module %s\n" m;*)
   Hashtbl.add xref_modules m ()
 
 let add_reference curmod pos dp sp id ty =
-  eprintf "add_reference %s %d %s %s %s %s\n" curmod pos dp sp id ty;
+  (*eprintf "add_reference %s %d %s %s %s %s\n" curmod pos dp sp id ty;*)
   if not (Hashtbl.mem xref_table (curmod, pos))
   then Hashtbl.add xref_table (curmod, pos) (Ref(dp, path sp id, ty))
 
@@ -74,7 +73,7 @@ let url_concat url suff =
   (if ends_with url "/" then url else url ^ "/") ^ suff
 
 let url_for_module m =
-  eprintf "url_for_module %s\n" m;
+  (*eprintf "url_for_module %s\n" m;*)
   let rec url_for = function
   | [] ->
       if Hashtbl.mem xref_modules m then m ^ ".html" else raise Not_found
@@ -89,7 +88,7 @@ type link = Link of string | Anchor of string | Nolink
 let re_sane_path = Str.regexp "[A-Za-z0-9_.]+$"
 
 let crossref m pos =
-  eprintf "crossref %s %d\n" m pos;
+  (*eprintf "crossref %s %d\n" m pos;*)
   try match Hashtbl.find xref_table (m, pos) with
   | Def(p, _) ->
       Anchor p
@@ -258,9 +257,13 @@ let end_proof kwd =
   fprintf !oc "%s</div>\n" kwd;
   in_proof := false
 
+(* Like Str.global_replace but don't interpret '\1' etc in replacement text *)
+let global_replace re subst txt =
+  Str.global_substitute re (fun _ -> subst) txt
+  
 let start_html_page modname =
   output_string !oc
-    (Str.global_replace (Str.regexp "\\$NAME") modname Resources.header)
+    (global_replace (Str.regexp "\\$NAME") modname Resources.header)
 
 let end_html_page () =
   output_string !oc Resources.footer
@@ -422,15 +425,22 @@ and globfile = parse
 
 {
 
+let make_redirect fromfile toURL =
+  let oc = open_out fromfile in
+  output_string oc
+    (global_replace (Str.regexp "\\$URL") toURL Resources.redirect);
+  close_out oc
+
 let output_dir = ref Filename.current_dir_name
 let logical_name_base = ref ""
 let generate_css = ref true
 let use_short_names = ref false
+let generate_redirects = ref false
 
 let module_name_of_file_name f =
   let components = Str.split (Str.regexp "/") f in
   String.concat "." (List.filter (fun s -> s <> "." && s <> "..") components)
- 
+
 let process_v_file f =
   let pref_f = Filename.chop_suffix f ".v" in
   let base_f = Filename.basename pref_f in
@@ -443,7 +453,10 @@ let process_v_file f =
   coq_bol (Lexing.from_channel ic);
   end_html_page();
   close_out !oc; oc := stdout;
-  close_in ic
+  close_in ic;
+  if !generate_redirects && !logical_name_base <> "" then
+    make_redirect (Filename.concat !output_dir (base_f ^ ".html"))
+                  (module_name ^ ".html")
 
 let process_glob_file f =
   current_module := "";
@@ -466,25 +479,27 @@ let _ =
     else begin
       eprintf "Don't know what to do with file %s\n" f; exit 2
     end in
-  Arg.parse [
-    "-d", Arg.Set_string output_dir,
-      " <dir>   Output files to directory <dir>";
+  Arg.parse (Arg.align [
     "-base", Arg.String (fun s -> logical_name_base := s ^ "."),
-      " <coqdir>  Set the name space for the modules being processed";
+      "<coqdir>  Set the name space for the modules being processed";
     "-coqlib", Arg.String (fun s -> add_documentation_url "Coq." s),
-      " <url>   Set base URL for Coq standard library";
+      "<url>   Set base URL for Coq standard library";
+    "-d", Arg.Set_string output_dir,
+      "<dir>   Output files to directory <dir> (default: current directory)";
     "-external",
       (let x = ref "" in
        Arg.Tuple [
          Arg.Set_string x;
          Arg.String (fun y -> add_documentation_url (y ^ ".") !x)
        ]),
-      " <url> <coqdir>   Set base URL for linking references whose names start with <coqdir>";
+      "<url> <coqdir> Set base URL for linking references whose names start with <coqdir>";
     "-no-css", Arg.Clear generate_css,
       "   Do not add coq2html.css to the output directory";
+    "-redirect", Arg.Set generate_redirects,
+      "   Generate redirection files modname.html -> coqdir.modname.html";
     "-short-names", Arg.Set use_short_names,
       "   Use short, unqualified module names in the output"
-  ]
+  ])
   process_file
   "Usage: coq2html [options] file.glob ... file.v ...\nOptions are:";
   if !v_files = [] then begin
