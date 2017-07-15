@@ -1,2 +1,3 @@
-Initial import, 2017-07-07
+Version 1.0, 2017-07-15  [for Coq 8.6]
 - Reused from the CompCert distribution, revised, and extended.
+- First standalone release.
