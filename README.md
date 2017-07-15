@@ -164,8 +164,8 @@ Nested lists are built using two, three or four dashes instead of one:
 ### Special handling of proof scripts
 
 Proof scripts are Coq text (outside comments) that
-* starts with `Proof` or `Next Obligation`;
-* ends with `Qed.` or `Defined.` or `Save.` or `Admitted.` or `Abort.`
+* starts with `Proof` or `Next Obligation` at the beginning of a line;
+* ends with `Qed.` or `Defined.` or `Save.` or `Admitted.` or `Abort.` at the end of a line.
 
 A proof script can start and end on the same line, e.g. `Proof. auto. Qed.`
 
