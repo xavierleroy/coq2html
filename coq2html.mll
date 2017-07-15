@@ -382,8 +382,6 @@ and doc = parse
       { character '\n'; doc_bol lexbuf }
   | "["
       { start_bracket(); bracket lexbuf; end_bracket(); doc lexbuf }
-  | "$" [^ '\n' '$']* "$"
-      { doc lexbuf }
   | "#" ([^ '\n' '#']* as html) "#"
       { output_string !oc html; doc lexbuf }
   | eof
