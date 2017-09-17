@@ -293,9 +293,10 @@ rule coq_bol = parse
         doc lexbuf;
         end_doc();
         skip_newline lexbuf }
-  | space* "(*"
-      { comment lexbuf;
-        skip_newline lexbuf }
+  | (space* as s) "(*"
+      { if !in_proof then (space s; start_comment());
+	comment lexbuf;
+        if !in_proof then coq lexbuf else skip_newline lexbuf }
   | eof
       { () }
   | space* as s
