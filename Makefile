@@ -10,6 +10,8 @@ coq2html: resources.cmx coq2html.cmx
 %.ml: %.mll
 	$(OCAMLLEX) $*.mll
 
+coq2html.cmx: resources.cmx
+
 resources.ml: coq2html.css coq2html.js coq2html.header coq2html.footer coq2html.redirect
 	(for i in header footer css js redirect; do \
          echo "let $$i = {xxx|"; \
