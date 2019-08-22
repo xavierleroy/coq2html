@@ -4,7 +4,7 @@
 
 coq2html is an HTML documentation generator for Coq source files.  It is an alternative to the standard coqdoc documentation generator distributed along with Coq.  The major feature of coq2html is its ability to fold proof scripts: in the generated HTML, proof scripts are initially hidden, but can be revealed one by one by clicking on the "Proof" keyword.  Here is an example of [folding in action](http://compcert.inria.fr/doc/html/Memory.html#Mem.valid_access_dec).
 
-**Compatibility:** to produce cross-references, coq2html reads `.glob` files produced by Coq.  The format of those files is undocumented and changes silently between major releases of Coq.  The current version of coq2html is believed to be compatible with Coq 8.8, 8.7, and 8.6.
+**Compatibility:** to produce cross-references, coq2html reads `.glob` files produced by Coq.  The format of those files is undocumented and changes silently between major releases of Coq.  The current version of coq2html is believed to be compatible with Coq 8.9, 8.8, 8.7, and 8.6.
 
 **History:** coq2html was developed and originally distributed as part of the [CompCert](http://compcert.inria.fr/) project when it became clear that the coqdoc of the time was not able to format the CompCert Coq sources the desired way.  This is the first release of coq2html as a stand-alone tool, independent from CompCert.
 

@@ -1,3 +1,7 @@
+Version 1.2, 2019-08-22  [for Coq 8.9, 8.8, 8.7, 8.6]
+- Fix unclosed element in page footer (PR#3).
+- Fix missing dependency in Makefile (PR#4).
+
 Version 1.1, 2018-07-10  [for Coq 8.8, 8.7, 8.6]
 - Fix handling of comments at beginning of line in proof scripts (PR#1).
 
