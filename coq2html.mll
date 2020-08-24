@@ -110,32 +110,47 @@ module StringSet = Set.Make(String)
 let mkset l = List.fold_right StringSet.add l StringSet.empty
 
 let coq_keywords = mkset [
+  (* Coq terms *)
   "forall"; "match"; "as"; "in"; "return"; "with"; "end"; "let";
-  "dest"; "fun"; "if"; "then"; "else"; "Prop"; "Set"; "Type"; ":=";
-  "where"; "struct"; "wf"; "measure";
-  "AddPath"; "Axiom"; "Abort"; "Boxed"; "Chapter"; "Check";
-  "Coercion"; "CoFixpoint"; "CoInductive"; "Corollary"; "Defined";
+  "fun"; "if"; "then"; "else"; "Prop"; "Set"; "Type"; ":="; "where";
+  "struct"; "wf"; "measure"; "fix"; "cofix"; "is";
+
+  (* Top-level things *)
+  "About"; "Axiom"; "Abort"; "Chapter"; "Check"; "Coercion";
+  "Compute"; "CoFixpoint"; "CoInductive"; "Corollary"; "Defined";
   "Definition"; "End"; "Eval"; "Example"; "Export"; "Fact"; "Fix";
-  "Fixpoint"; "Global"; "Grammar"; "Goal"; "Hint"; "Hypothesis";
-  "Hypotheses"; "Resolve"; "Unfold"; "Immediate"; "Extern";
-  "Implicit"; "Import"; "Inductive"; "Infix"; "Lemma"; "Let"; "Load";
-  "Local"; "Ltac"; "Module"; "Module Type"; "Declare Module";
-  "Include"; "Mutual"; "Parameter"; "Parameters"; "Print"; "Proof";
-  "Qed"; "Record"; "Recursive"; "Remark"; "Require";
-  "Save"; "Scheme"; "Induction"; "for"; "Sort"; "Section"; "Show";
-  "Structure"; "Syntactic"; "Syntax"; "Tactic"; "Theorem"; "Set";
-  "Types"; "Undo"; "Unset"; "Variable"; "Variables"; "Context";
-  "Notation"; "Reserved"; "Tactic"; "Delimit"; "Bind"; "Open";
-  "Scope"; "Boxed"; "Unboxed"; "Inline"; "Implicit Arguments"; "Add";
-  "Strict"; "Typeclasses"; "Instance"; "Global Instance"; "Class";
-  "Instantiation"; "subgoal"; "Program"; "Example"; "Obligation";
-  "Obligations"; "Solve"; "using"; "Next"; "Instance"; "Equations";
-  "Equations_nocomp"
+  "Fixpoint"; "From"; "Function"; "Generalizable"; "Global";
+  "Grammar"; "Guarded"; "Goal"; "Hint"; "Debug"; "On";
+  "Hypothesis"; "Hypotheses"; "Resolve"; "Unfold"; "Immediate";
+  "Extern"; "Constructors"; "Rewrite"; "Implicit"; "Import";
+  "Inductive"; "Infix"; "Lemma"; "Let"; "Load"; "Local"; "Locate";
+  "Ltac"; "Module"; "Module Type"; "Declare Module"; "Include";
+  "Mutual"; "Parameter"; "Parameters"; "Print"; "Printing"; "All";
+  "Proof"; "Proof with"; "Qed"; "Record"; "Recursive"; "Remark";
+  "Require"; "Save"; "Scheme"; "Assumptions"; "Axioms";
+  "Universes"; "Induction"; "for"; "Sort"; "Section"; "Show";
+  "Structure"; "Syntactic"; "Syntax"; "Tactic"; "Theorem";
+  "Search"; "SearchAbout"; "SearchHead"; "SearchPattern";
+  "SearchRewrite"; "Set"; "Types"; "Undo"; "Unset"; "Variable";
+  "Variables"; "Context"; "Notation"; "Reserved Notation"; "Tactic
+  Notation"; "Delimit"; "Bind"; "Open"; "Scope"; "Inline";
+  "Implicit Arguments"; "Add"; "Strict"; "Typeclasses";
+  "Instance"; "Global Instance"; "Class"; "Instantiation";
+  "subgoal"; "subgoals"; "vm_compute"; "Opaque"; "Transparent";
+  "Time"; "Extraction"; "Extract"; "Variant";
+
+  (* Program and Equations *)
+  "Program"; "Obligation"; "Obligations"; "Solve"; "using"; "Next";
+  "Equations"; "Equations_nocomp"
 ]
 
 let coq_tactics = mkset [
   "intro"; "intros"; "apply"; "rewrite"; "refine"; "case"; "clear";
-  "injection"; "elimtype"; "progress"; "setoid_rewrite"; "destruct";
+  "injection"; "elimtype"; "progress"; "setoid_rewrite"; "left";
+  "right"; "constructor"; "econstructor"; "decide equality";
+  "abstract"; "exists"; "cbv"; "simple destruct"; "info"; "field";
+  "specialize"; "evar"; "solve"; "instantiate"; "info_auto";
+  "info_eauto"; "quote"; "eexact"; "autorewrite"; "destruct";
   "destruction"; "destruct_call"; "dependent"; "elim";
   "extensionality"; "f_equal"; "generalize"; "generalize_eqs";
   "generalize_eqs_vars"; "induction"; "rename"; "move"; "omega";
@@ -144,9 +159,10 @@ let coq_tactics = mkset [
   "compute"; "at"; "in"; "by"; "reflexivity"; "symmetry";
   "transitivity"; "replace"; "setoid_replace"; "inversion";
   "inversion_clear"; "pattern"; "intuition"; "congruence"; "fail";
-  "fresh"; "trivial"; "exact"; "tauto"; "firstorder"; "ring";
-  "clapply"; "program_simpl"; "program_simplify"; "eapply"; "auto";
-  "eauto"
+  "fresh"; "trivial"; "tauto"; "firstorder"; "ring"; "clapply";
+  "program_simpl"; "program_simplify"; "eapply"; "auto"; "eauto";
+  "change"; "fold"; "hnf"; "lazy"; "simple"; "eexists"; "debug";
+  "idtac"; "first"; "type of"; "pose"; "eval"; "instantiate"; "until"
 ]
 
 (** HTML generation *)
