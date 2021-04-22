@@ -261,12 +261,15 @@ let end_bracket () =
 let in_proof = ref false
 let proof_counter = ref 0
 
-let start_proof kwd =
+let start_proof s kwd =
   in_proof := true;
   incr proof_counter;
+  fprintf !oc "<div>";
+  space s;
   fprintf !oc
-  "<div class=\"toggleproof\" onclick=\"toggleDisplay('proof%d')\">%s</div>\n"
-    !proof_counter kwd;
+    "<span class=\"toggleproof\" onclick=\"toggleDisplay('proof%d')\">%s</span></div>\n"
+    !proof_counter
+    kwd;
   fprintf !oc "<div class=\"proofscript\" id=\"proof%d\">\n" !proof_counter
 
 let end_proof kwd =
@@ -296,8 +299,8 @@ let xref = ['A'-'Z' 'a'-'z' '0'-'9' '_' '.']+ | "<>"
 let integer = ['0'-'9']+
 
 rule coq_bol = parse
-  | space* (start_proof as sp)
-      { start_proof sp;
+  | (space* as s) (start_proof as sp)
+      { start_proof s sp;
         skip_newline lexbuf }
   | space* "(** " ("*"+ as sect)
       { start_section sect;
