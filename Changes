@@ -1,3 +1,8 @@
+Version 1.3, 2021-10-04
+- Preserve indentation of "Proof." (PR#7).
+- Updated list of keywords for coloring.
+- Updated various URLs (PR#5 and more).
+
 Version 1.2, 2019-08-22  [for Coq 8.9, 8.8, 8.7, 8.6]
 - Fix unclosed element in page footer (PR#3).
 - Fix missing dependency in Makefile (PR#4).
