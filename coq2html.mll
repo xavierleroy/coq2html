@@ -103,66 +103,40 @@ let crossref m pos =
   with Not_found ->
     Nolink
 
-(** Keywords, etc *)
+(** Keywords *)
 
 module StringSet = Set.Make(String)
 
 let mkset l = List.fold_right StringSet.add l StringSet.empty
 
 let coq_keywords = mkset [
-  (* Coq terms *)
-  "forall"; "match"; "as"; "in"; "return"; "with"; "end"; "let";
-  "fun"; "if"; "then"; "else"; "Prop"; "Set"; "Type"; ":="; "where";
-  "struct"; "wf"; "measure"; "fix"; "cofix"; "is";
-
-  (* Top-level things *)
-  "About"; "Axiom"; "Abort"; "Chapter"; "Check"; "Coercion";
-  "Compute"; "CoFixpoint"; "CoInductive"; "Corollary"; "Defined";
-  "Definition"; "End"; "Eval"; "Example"; "Export"; "Fact"; "Fix";
-  "Fixpoint"; "From"; "Function"; "Generalizable"; "Global";
-  "Grammar"; "Guarded"; "Goal"; "Hint"; "Debug"; "On";
-  "Hypothesis"; "Hypotheses"; "Resolve"; "Unfold"; "Immediate";
-  "Extern"; "Constructors"; "Rewrite"; "Implicit"; "Import";
-  "Inductive"; "Infix"; "Lemma"; "Let"; "Load"; "Local"; "Locate";
-  "Ltac"; "Module"; "Module Type"; "Declare Module"; "Include";
-  "Mutual"; "Parameter"; "Parameters"; "Print"; "Printing"; "All";
-  "Proof"; "Proof with"; "Qed"; "Record"; "Recursive"; "Remark";
-  "Require"; "Save"; "Scheme"; "Assumptions"; "Axioms";
-  "Universes"; "Induction"; "for"; "Sort"; "Section"; "Show";
-  "Structure"; "Syntactic"; "Syntax"; "Tactic"; "Theorem";
-  "Search"; "SearchAbout"; "SearchHead"; "SearchPattern";
-  "SearchRewrite"; "Set"; "Types"; "Undo"; "Unset"; "Variable";
-  "Variables"; "Context"; "Notation"; "Reserved Notation"; "Tactic
-  Notation"; "Delimit"; "Bind"; "Open"; "Scope"; "Inline";
-  "Implicit Arguments"; "Add"; "Strict"; "Typeclasses";
-  "Instance"; "Global Instance"; "Class"; "Instantiation";
-  "subgoal"; "subgoals"; "vm_compute"; "Opaque"; "Transparent";
-  "Time"; "Extraction"; "Extract"; "Variant";
-
-  (* Program and Equations *)
-  "Program"; "Obligation"; "Obligations"; "Solve"; "using"; "Next";
-  "Equations"; "Equations_nocomp"
-]
-
-let coq_tactics = mkset [
-  "intro"; "intros"; "apply"; "rewrite"; "refine"; "case"; "clear";
-  "injection"; "elimtype"; "progress"; "setoid_rewrite"; "left";
-  "right"; "constructor"; "econstructor"; "decide equality";
-  "abstract"; "exists"; "cbv"; "simple destruct"; "info"; "field";
-  "specialize"; "evar"; "solve"; "instantiate"; "info_auto";
-  "info_eauto"; "quote"; "eexact"; "autorewrite"; "destruct";
-  "destruction"; "destruct_call"; "dependent"; "elim";
-  "extensionality"; "f_equal"; "generalize"; "generalize_eqs";
-  "generalize_eqs_vars"; "induction"; "rename"; "move"; "omega";
-  "set"; "assert"; "do"; "repeat"; "cut"; "assumption"; "exact";
-  "split"; "subst"; "try"; "discriminate"; "simpl"; "unfold"; "red";
-  "compute"; "at"; "in"; "by"; "reflexivity"; "symmetry";
-  "transitivity"; "replace"; "setoid_replace"; "inversion";
-  "inversion_clear"; "pattern"; "intuition"; "congruence"; "fail";
-  "fresh"; "trivial"; "tauto"; "firstorder"; "ring"; "clapply";
-  "program_simpl"; "program_simplify"; "eapply"; "auto"; "eauto";
-  "change"; "fold"; "hnf"; "lazy"; "simple"; "eexists"; "debug";
-  "idtac"; "first"; "type of"; "pose"; "eval"; "instantiate"; "until"
+(* "The following character sequences are keywords defined in the
+    main Coq grammar that cannot be used as identifiers"
+    (reference manual) *)
+  "Axiom"; "CoFixpoint"; "Definition"; "Fixpoint"; "Hypothesis";
+  "Parameter"; "Prop"; "SProp"; "Set"; "Theorem"; "Type"; "Variable";
+  "as"; "at"; "cofix"; "else"; "end"; "fix"; "for"; "forall"; "fun";
+  "if"; "in"; "let"; "match"; "return"; "then"; "where"; "with";
+(* "The following are keywords defined in notations or plugins
+    loaded in the prelude" (reference manual) *)
+  "IF"; "by"; "exists"; "exists2"; "using";
+(* The commands from the "Command Index" part of the reference manual.
+   Some commands I don't expect to see in .v files were removed. *)
+  "Abort"; "About"; "Admitted"; "Arguments"; "Axiom"; "Axioms";
+  "Canonical"; "Cd"; "Check"; "Class"; "Close"; "CoFixpoint";
+  "CoInductive"; "Coercion"; "Collection"; "Combined"; "Comments";
+  "Compute"; "Conjecture"; "Conjectures"; "Constraint"; "Context";
+  "Corollary"; "Defined"; "Definition"; "End"; "Eval"; "Example";
+  "Existential"; "Export"; "Fact"; "Fail"; "Fixpoint"; "Focus"; "From";
+  "Function"; "Functional"; "Goal"; "Hint"; "Hypotheses"; "Hypothesis";
+  "Implicit"; "Import"; "Include"; "Inductive"; "Infix"; "Instance";
+  "Lemma"; "Let"; "Ltac"; "Ltac2"; "Module"; "Next"; "Notation";
+  "Obligation"; "Obligations"; "Opaque"; "Open"; "Parameter";
+  "Parameters"; "Proof"; "Proposition"; "Qed"; "Record"; "Remark";
+  "Require"; "Reserved"; "Scheme"; "Scope"; "Section"; "Set";
+  "Strategy"; "Structure"; "SubClass"; "Tactic"; "Theorem";
+  "Transparent"; "Type"; "Universe"; "Variable"; "Variables"; "Variant";
+  "using"; "with"
 ]
 
 (** HTML generation *)
@@ -217,8 +191,6 @@ let end_doc () =
 let ident pos id =
   if StringSet.mem id coq_keywords then
     fprintf !oc "<span class=\"kwd\">%s</span>" id
-  else if StringSet.mem id coq_tactics then
-    fprintf !oc "<span class=\"tactic\">%s</span>" id
   else match crossref !current_module pos with
   | Nolink ->
       fprintf !oc "<span class=\"id\">%s</span>" id

@@ -9,7 +9,6 @@
      span.bracket contents of [ ] within comments
      span.comment contents of (* *) comments
      span.kwd     Coq keyword
-     span.tactic  Coq tactic
      span.id      any other identifier
 */
 
