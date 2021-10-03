@@ -53,7 +53,7 @@ let add_definition curmod pos sp id ty =
 
 (* Map module names to URLs *)
 
-let coqlib_url = "http://coq.inria.fr/library/"
+let coqlib_url = "https://coq.inria.fr/library/"
 
 (* logical name with final '.' -> absolute or relative URL *)
 let documentation_urls : (string * string) list ref = ref [("Coq.", coqlib_url)]

@@ -2,11 +2,11 @@
 
 ## Overview
 
-coq2html is an HTML documentation generator for Coq source files.  It is an alternative to the standard coqdoc documentation generator distributed along with Coq.  The major feature of coq2html is its ability to fold proof scripts: in the generated HTML, proof scripts are initially hidden, but can be revealed one by one by clicking on the "Proof" keyword.  Here is an example of [folding in action](http://compcert.inria.fr/doc/html/compcert.common.Memory.html#Mem.valid_access_dec).
+coq2html is an HTML documentation generator for Coq source files.  It is an alternative to the standard coqdoc documentation generator distributed along with Coq.  The major feature of coq2html is its ability to fold proof scripts: in the generated HTML, proof scripts are initially hidden, but can be revealed one by one by clicking on the "Proof" keyword.  Here is an example of [folding in action](https://compcert.org/doc/html/compcert.common.Memory.html#Mem.valid_access_dec)
 
-**Compatibility:** to produce cross-references, coq2html reads `.glob` files produced by Coq.  The format of those files is undocumented and changes silently between major releases of Coq.  The current version of coq2html is believed to be compatible with Coq 8.9, 8.8, 8.7, and 8.6.
+**Compatibility:** to produce cross-references, coq2html reads `.glob` files produced by Coq.  The format of those files is undocumented and changes silently between major releases of Coq.  The current version of coq2html is believed to be compatible with Coq 8.6 to 8.13.
 
-**History:** coq2html was developed and originally distributed as part of the [CompCert](http://compcert.inria.fr/) project when it became clear that the coqdoc of the time was not able to format the CompCert Coq sources the desired way.  This is the first release of coq2html as a stand-alone tool, independent from CompCert.
+**History:** coq2html was developed and originally distributed as part of the [CompCert](https://compcert.org/) project when it became clear that the coqdoc of the time was not able to format the CompCert Coq sources the desired way.  This is the release of coq2html as a stand-alone tool, independent from CompCert.
 
 ## Usage
 
@@ -74,15 +74,15 @@ By default, cross-references are generated if the referenced definition is
 
 For this reason, to get better cross-referencing, you should either do a single run of coq2html with all the `.v` and `.glob` files of your Coq development, or give all the `.glob` files of your library to every run of coq2html on every `.v` file.
 
-The cross-references to the Coq standard library use the online version of this library at http://coq.inria.fr/library, which corresponds to the latest release of Coq.  If you wish to reference a specific version of the standard library, use the `-coqlib` option, e.g.
+The cross-references to the Coq standard library use the online version of this library at https://coq.inria.fr/library/, which corresponds to the latest release of Coq.  If you wish to reference a specific version of the standard library, use the `-coqlib` option, e.g.
 ```
-        coq2html -coqlib https://coq.inria.fr/distrib/8.5pl3/stdlib ...
+        coq2html -coqlib https://coq.inria.fr/distrib/V8.9.0/stdlib ...
 ```
-for the 8.5pl3 version of the standard library.
+for the 8.9 version of the standard library.
 
 Using the `-external` option, you can add cross-references to other external libraries whose coqdoc or coq2html-generated documentation is accessible online.  For example, 
 ```
-        coq2html -external http://math-comp.github.io/math-comp/htmldoc mathcomp ...
+        coq2html -external https://math-comp.github.io/htmldoc_1_12_0 mathcomp ...
 ```
 should produce cross-references to the `mathcomp` library modules.  (Warning: untested feature.)
 
