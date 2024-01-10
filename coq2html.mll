@@ -2,7 +2,7 @@
 (*                                                                     *)
 (*              The Coq2HTML documentation generator                   *)
 (*                                                                     *)
-(*                   Xavier Leroy, INRIA Paris                         *)
+(*          Xavier Leroy, Collège de France and INRIA Paris            *)
 (*                                                                     *)
 (*  Copyright Institut National de Recherche en Informatique et en     *)
 (*  Automatique.  All rights reserved.  This file is distributed       *)
