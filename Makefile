@@ -1,4 +1,4 @@
-OCAMLOPT=ocamlopt
+OCAMLOPT=ocamlopt -I +str
 OCAMLLEX=ocamllex
 
 coq2html: resources.cmx coq2html.cmx
@@ -7,16 +7,23 @@ coq2html: resources.cmx coq2html.cmx
 %.cmx: %.ml
 	$(OCAMLOPT) -c $*.ml
 
+%.cmi: %.mli
+	$(OCAMLOPT) -c $*.mli
+
 %.ml: %.mll
 	$(OCAMLLEX) $*.mll
 
 coq2html.cmx: resources.cmx
+resources.cmx: resources.cmi
 
-resources.ml: coq2html.css coq2html.js coq2html.header coq2html.footer coq2html.redirect
-	(for i in header footer css js redirect; do \
+RESOURCES=header footer css js redirect
+
+resources.ml: $(RESOURCES:%=coq2html.%)
+	(for i in $(RESOURCES); do \
          echo "let $$i = {xxx|"; \
          cat coq2html.$$i; \
          echo '|xxx}'; \
+         echo ''; \
          done) > resources.ml
 
 clean:
