@@ -191,6 +191,8 @@ let end_doc () =
 let ident pos id =
   if StringSet.mem id coq_keywords then
     fprintf !oc "<span class=\"kwd\">%s</span>" id
+  else if id = "_" then
+    fprintf !oc "_"
   else match crossref !current_module pos with
   | Nolink ->
       fprintf !oc "<span class=\"id\">%s</span>" id
@@ -262,11 +264,13 @@ let end_html_page () =
 }
 
 let space = [' ' '\t']
-let ident = ['A'-'Z' 'a'-'z' '_'] ['A'-'Z' 'a'-'z' '0'-'9' '_']*
+let identstart = ['A'-'Z' 'a'-'z' '_']
+let identnext  = ['A'-'Z' 'a'-'z' '_'  '0'-'9' '\'']
+let ident = identstart identnext*
 let path = ident ("." ident)*
 let start_proof = ("Proof" space* ".") | ("Proof" space+ "with") | ("Next" space+ "Obligation.")
 let end_proof = "Qed." | "Defined." | "Save." | "Admitted." | "Abort."
-
+let globkind = ['a'-'z']+
 let xref = ['A'-'Z' 'a'-'z' '0'-'9' '_' '.']+ | "<>"
 let integer = ['0'-'9']+
 
@@ -399,11 +403,11 @@ and globfile = parse
     space+ (xref as dp)
     space+ (xref as sp)
     space+ (xref as id)
-    space+ (ident as ty)
+    space+ (globkind as ty)
     space* "\n"
       { add_reference !current_module (int_of_string pos) dp sp id ty;
         globfile lexbuf }
-  | (ident as ty)
+  | (globkind as ty)
     space+ (integer as pos) ":" (integer)
     space+ (xref as sp)
     space+ (xref as id)
