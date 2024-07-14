@@ -4,7 +4,7 @@
 
 coq2html is an HTML documentation generator for Coq source files.  It is an alternative to the standard coqdoc documentation generator distributed along with Coq.  The major feature of coq2html is its ability to fold proof scripts: in the generated HTML, proof scripts are initially hidden, but can be revealed one by one by clicking on the "Proof" keyword.  Here is an example of [folding in action](https://compcert.org/doc/html/compcert.common.Memory.html#Mem.valid_access_dec)
 
-**Compatibility:** to produce cross-references, coq2html reads `.glob` files produced by Coq.  The format of those files is undocumented and changes silently between major releases of Coq.  The current version of coq2html is believed to be compatible with Coq 8.6 to 8.13.
+**Compatibility:** to produce cross-references, coq2html reads `.glob` files produced by Coq.  The format of those files sometimes changes between major releases of Coq, thus breaking coq2html.  The current version of coq2html is believed to be compatible with Coq 8.6 to 8.19.
 
 **History:** coq2html was developed and originally distributed as part of the [CompCert](https://compcert.org/) project when it became clear that the coqdoc of the time was not able to format the CompCert Coq sources the desired way.  This is the release of coq2html as a stand-alone tool, independent from CompCert.
 
@@ -76,9 +76,9 @@ For this reason, to get better cross-referencing, you should either do a single 
 
 The cross-references to the Coq standard library use the online version of this library at https://coq.inria.fr/library/, which corresponds to the latest release of Coq.  If you wish to reference a specific version of the standard library, use the `-coqlib` option, e.g.
 ```
-        coq2html -coqlib https://coq.inria.fr/distrib/V8.9.0/stdlib ...
+        coq2html -coqlib https://coq.inria.fr/doc/V8.14.1/stdlib
 ```
-for the 8.9 version of the standard library.
+for the 8.14.1 version of the standard library.
 
 Using the `-external` option, you can add cross-references to other external libraries whose coqdoc or coq2html-generated documentation is accessible online.  For example, 
 ```
@@ -185,11 +185,9 @@ Proof. auto. Defined .          (* Whitespace between "Defined" and "." *)
 Lemma x:...  Proof. Admitted.   (* "Proof" must start a new line. *)
 ```
 
+## Known limitations
 
+- Cross-referencing (HTML links on identifiers that jump to the definition of the identifiers) is implemented for identifiers bound at the top-level of a Coq source file (by `Definition`, `Fixpoint`, `Inductive`, `Module`, `Variable`, etc), but not for identifiers bound within Coq terms (by `fun`, `match`, `forall`, etc). There is no cross-referencing for user-defined notations either.
 
-
-
-
-
-
+- The formatting of right-hanging documentation comments `(**r` is inflexible and not appropriate for narrow display windows or long source lines.
 
