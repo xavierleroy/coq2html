@@ -61,16 +61,8 @@ let documentation_urls : (string * string) list ref = ref [("Coq.", coqlib_url)]
 let add_documentation_url logicalname url =
   documentation_urls := (logicalname ^ ".", url) :: !documentation_urls
 
-let starts_with s x =
-  let ls = String.length s and lx = String.length x in
-  ls >= lx && String.sub s 0 lx = x
-
-let ends_with s x =
-  let ls = String.length s and lx = String.length x in
-  ls >= lx && String.sub s (ls - lx) lx = x
-
 let url_concat url suff =
-  (if ends_with url "/" then url else url ^ "/") ^ suff
+  (if String.ends_with ~suffix:"/" url then url else url ^ "/") ^ suff
 
 let url_for_module m =
   (*eprintf "url_for_module %s\n" m;*)
@@ -78,7 +70,9 @@ let url_for_module m =
   | [] ->
       if Hashtbl.mem xref_modules m then m ^ ".html" else raise Not_found
   | (pref, url) :: rem ->
-      if starts_with m pref then url_concat url m ^ ".html" else url_for rem
+      if String.starts_with ~prefix:pref m
+      then url_concat url m ^ ".html"
+      else url_for rem
   in url_for !documentation_urls
 
 (* Produce a HTML link if possible *)
