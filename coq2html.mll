@@ -85,7 +85,7 @@ let url_for_module m =
 
 type link = Link of string | Anchor of string | Nolink
 
-let re_sane_path = Str.regexp "[A-Za-z0-9_.]+$"
+let re_sane_path = Str.regexp "[A-Za-z0-9_.\x80-\xFF]+$"
 
 let crossref m pos =
   (*eprintf "crossref %s %d\n" m pos;*)
@@ -270,14 +270,15 @@ let end_html_page () =
 }
 
 let space = [' ' '\t']
-let identstart = ['A'-'Z' 'a'-'z' '_']
-let identnext  = ['A'-'Z' 'a'-'z' '_'  '0'-'9' '\'']
+let utf8 = ['\192'-'\255'] ['\128'-'\191']*
+let identstart = ['A'-'Z' 'a'-'z' '_'] | utf8
+let identnext  = ['A'-'Z' 'a'-'z' '_'  '0'-'9' '\''] | utf8
 let ident = identstart identnext*
 let path = ident ("." ident)*
 let start_proof = ("Proof" space* ".") | ("Proof" space+ "with") | ("Next" space+ "Obligation.")
 let end_proof = "Qed." | "Defined." | "Save." | "Admitted." | "Abort."
 let globkind = ['a'-'z']+
-let xref = ['A'-'Z' 'a'-'z' '0'-'9' '_' '.']+ | "<>"
+let xref = (['A'-'Z' 'a'-'z' '0'-'9' '_' '.'] | utf8)+ | "<>"
 let integer = ['0'-'9']+
 
 rule coq_bol = parse
