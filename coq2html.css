@@ -99,3 +99,7 @@ a:visited {color : #0000BF; text-decoration : none; }
 a:link {color : #0000BF; text-decoration : none; }
 a:hover {text-decoration : none; }
 a:active {text-decoration : none; }
+
+.coq :target {
+  background-color: yellow;
+}
