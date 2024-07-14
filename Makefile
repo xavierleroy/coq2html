@@ -1,8 +1,8 @@
-OCAMLOPT=ocamlopt -I +str
+OCAMLOPT=ocamlfind opt -thread -package str,coq-core.clib
 OCAMLLEX=ocamllex
 
 coq2html: resources.cmx coq2html.cmx
-	$(OCAMLOPT) -o coq2html str.cmxa resources.cmx coq2html.cmx
+	$(OCAMLOPT) -linkpkg -o coq2html resources.cmx coq2html.cmx
 
 %.cmx: %.ml
 	$(OCAMLOPT) -c $*.ml
