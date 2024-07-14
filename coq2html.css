@@ -90,6 +90,10 @@ span.comment {
   color:  #008000;
 }
 
+span.string {
+  color: Maroon;
+}
+
 a:visited {color : #416DFF; text-decoration : none; }
 a:link {color : #416DFF; text-decoration : none; }
 a:hover {text-decoration : none; }
