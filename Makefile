@@ -1,4 +1,4 @@
-OCAMLOPT=ocamlfind opt -thread -package str,coq-core.clib
+OCAMLOPT=ocamlfind opt -rectypes -thread -package str,coq-core.clib
 OCAMLLEX=ocamllex
 
 coq2html: resources.cmx coq2html.cmx

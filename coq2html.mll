@@ -48,6 +48,7 @@ let add_reference curmod pos dp sp id ty =
   then Hashtbl.add xref_table (curmod, pos) (Ref(dp, path sp id, ty))
 
 let add_definition curmod pos sp id ty =
+  (*eprintf "add_definition %s %d %s %s %s\n" curmod pos sp id ty;*)
   if not (Hashtbl.mem xref_table (curmod, pos))
   then Hashtbl.add xref_table (curmod, pos) (Def(path sp id, ty))
 
@@ -79,14 +80,15 @@ let url_for_module m =
 
 type link = Link of string | Anchor of string | Nolink
 
-let re_sane_path = Str.regexp "[A-Za-z0-9_.]+$"
+let re_sane_path = Str.regexp "[A-Za-z0-9_.\x80-\xFF]+$"
 
 let crossref m pos =
-  (*eprintf "crossref %s %d\n" m pos;*)
   try match Hashtbl.find xref_table (m, pos) with
   | Def(p, _) ->
+      (*eprintf "crossref %s %d -> Def %s\n" m pos p;*)
       Anchor p
   | Ref(m', p, _) ->
+      (*eprintf "crossref %s %d -> Ref %s %s\n" m pos m' p;*)
       let url = url_for_module m' in  (* can raise Not_found *)
       if p = "" then
         Link url
@@ -195,6 +197,42 @@ let ident pos id =
   | Anchor p ->
       fprintf !oc "<span class=\"id\"><a name=\"%s\">%s</a></span>" p id
 
+(* UTF-8 parsing *)
+
+let get_uchar s i =
+  let d = String.get_utf_8_uchar s i in
+  (Uchar.to_int (Uchar.utf_decode_uchar d), Uchar.utf_decode_length d)
+
+(* With our lax UTF-8 parsing, a "path" can be several paths separated
+   by Unicode symbols (but no space), as in "A⟂B".  Re-scan the given
+   string to identify the actual paths. *)
+
+let path pos s =
+  let rec start_path i =
+    if i >= String.length s then () else begin
+      let (u, len) = get_uchar s i in
+      if Unicode.(is_valid_ident_initial (classify u)) then
+        continue_path i (i + len)
+      else begin
+        output_substring !oc s i len;
+        start_path (i + len)
+      end
+    end
+  and continue_path i0 i =
+    if i >= String.length s then
+      ident (pos + i0) (String.sub s i0 (i - i0))
+    else begin
+      let (u, len) = get_uchar s i in
+      if Unicode.(is_valid_ident_trailing (classify u)) || u = Char.code '.' then
+        continue_path i0 (i + len)
+      else begin
+        ident (pos + i0) (String.sub s i0 (i - i0));
+        output_substring !oc s i len;
+        start_path (i + len)
+      end
+    end
+  in start_path 0      
+
 let space s =
   for _ = 1 to String.length s do fprintf !oc "&nbsp;" done
 
@@ -264,14 +302,15 @@ let end_html_page () =
 }
 
 let space = [' ' '\t']
-let identstart = ['A'-'Z' 'a'-'z' '_']
-let identnext  = ['A'-'Z' 'a'-'z' '_'  '0'-'9' '\'']
+let utf8 = ['\192'-'\255'] ['\128'-'\191']*
+let identstart = ['A'-'Z' 'a'-'z' '_'] | utf8
+let identnext  = ['A'-'Z' 'a'-'z' '_'  '0'-'9' '\''] | utf8
 let ident = identstart identnext*
 let path = ident ("." ident)*
 let start_proof = ("Proof" space* ".") | ("Proof" space+ "with") | ("Next" space+ "Obligation.")
 let end_proof = "Qed." | "Defined." | "Save." | "Admitted." | "Abort."
 let globkind = ['a'-'z']+
-let xref = ['A'-'Z' 'a'-'z' '0'-'9' '_' '.']+ | "<>"
+let xref = (['A'-'Z' 'a'-'z' '0'-'9' '_' '.'] | utf8)+ | "<>"
 let integer = ['0'-'9']+
 
 rule coq_bol = parse
@@ -318,7 +357,7 @@ and coq = parse
         comment lexbuf;
         coq lexbuf }
   | path as id
-      { ident (Lexing.lexeme_start lexbuf) id; coq lexbuf }
+      { path (Lexing.lexeme_start lexbuf) id; coq lexbuf }
   | "\""
       { start_string();
         string lexbuf;
@@ -347,7 +386,7 @@ and bracket = parse
   | '['
       { character '['; bracket lexbuf; character ']'; bracket lexbuf }
   | path as id
-      { ident (Lexing.lexeme_start lexbuf) id; bracket lexbuf }
+      { path (Lexing.lexeme_start lexbuf) id; bracket lexbuf }
   | "\""
       { start_string();
         string lexbuf;
