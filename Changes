@@ -1,14 +1,21 @@
+Version 1.4, 2024-07-16
+- Recognize single quotes in identifiers.
+- Preliminary support for Unicode characters in identifiers (#2).
+- Recognize character strings "..." and display them specially.
+- Default style: use darker shade of blue for links.
+- Default style: highlight the target of `URL#fragment` links.
+
 Version 1.3, 2021-10-04
-- Preserve indentation of "Proof." (PR#7).
+- Preserve indentation of "Proof." (#7).
 - Updated list of keywords for coloring.
-- Updated various URLs (PR#5 and more).
+- Updated various URLs (#5 and more).
 
 Version 1.2, 2019-08-22  [for Coq 8.9, 8.8, 8.7, 8.6]
-- Fix unclosed element in page footer (PR#3).
-- Fix missing dependency in Makefile (PR#4).
+- Fix unclosed element in page footer (#3).
+- Fix missing dependency in Makefile (#4).
 
 Version 1.1, 2018-07-10  [for Coq 8.8, 8.7, 8.6]
-- Fix handling of comments at beginning of line in proof scripts (PR#1).
+- Fix handling of comments at beginning of line in proof scripts (#1).
 
 Version 1.0, 2017-07-15  [for Coq 8.6]
 - Reused from the CompCert distribution, revised, and extended.
