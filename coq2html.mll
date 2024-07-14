@@ -166,7 +166,7 @@ let end_doc_right () =
 
 let enum_depth = ref 0
 
-let  set_enum_depth d =
+let set_enum_depth d =
   if !enum_depth < d then begin
     fprintf !oc "<ul>\n";
     fprintf !oc "<li>\n";
@@ -231,6 +231,12 @@ let start_bracket () =
 
 let end_bracket () =
   fprintf !oc "</span>"
+
+let start_string () =
+  fprintf !oc  "<span class=\"string\">\""
+
+let end_string () =
+  fprintf !oc  "\"</span>"
 
 let in_proof = ref false
 let proof_counter = ref 0
@@ -319,12 +325,27 @@ and coq = parse
         coq lexbuf }
   | path as id
       { ident (Lexing.lexeme_start lexbuf) id; coq lexbuf }
+  | "\""
+      { start_string();
+        string lexbuf;
+        end_string();
+        coq lexbuf }
   | "\n"
       { newline(); coq_bol lexbuf }
   | eof
       { () }
   | _ as c
       { character c; coq lexbuf }
+
+and string = parse
+  | "\"\""
+      { character '\"'; character '\"'; string lexbuf }
+  | "\""
+      { () }
+  | eof
+      { () }
+  | _ as c
+      { character c; string lexbuf }
 
 and bracket = parse
   | ']'
@@ -333,6 +354,11 @@ and bracket = parse
       { character '['; bracket lexbuf; character ']'; bracket lexbuf }
   | path as id
       { ident (Lexing.lexeme_start lexbuf) id; bracket lexbuf }
+  | "\""
+      { start_string();
+        string lexbuf;
+        end_string();
+        coq lexbuf }
   | eof
       { () }
   | _ as c

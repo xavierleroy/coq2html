@@ -8,6 +8,7 @@
      span.docright contents of (**r *) comments
      span.bracket contents of [ ] within comments
      span.comment contents of (* *) comments
+     span.string  string literals "..."
      span.kwd     Coq keyword
      span.id      any other identifier
 */
@@ -88,6 +89,10 @@ span.kwd {
 
 span.comment {
   color:  #008000;
+}
+
+span.string {
+  color: Maroon;
 }
 
 a:visited {color : #416DFF; text-decoration : none; }
