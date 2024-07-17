@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "coq-coq2html"
-version: "1.4"
+version: "1.5"
 maintainer: "Xavier Leroy <xavier.leroy@college-de-france.fr>"
 homepage: "https://github.com/xavierleroy/coq2html"
 dev-repo: "git+https://github.com/xavierleroy/coq2html.git"

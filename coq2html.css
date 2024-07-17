@@ -3,7 +3,7 @@
      div.coq      encloses all generated body
      div.doc      contents of (** *) comments
      div.footer   footer
-     span.togglescript   "Proof." line
+     summary.toggleproof   "Proof." line
      div.proofscript  contents of proof script
      span.docright contents of (**r *) comments
      span.bracket contents of [ ] within comments
@@ -51,13 +51,10 @@ div.doc {
   font-family: serif;
 }
 
-span.toggleproof {
+summary.toggleproof {
+  list-style-position: outside;
   font-size: 0.8em;
   text-decoration: underline;
-}
-
-span.toggleproof:hover {
-  cursor: pointer;
 }
 
 div.proofscript {

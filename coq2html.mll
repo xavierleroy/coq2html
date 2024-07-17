@@ -239,21 +239,15 @@ let end_string () =
   fprintf !oc  "\"</span>"
 
 let in_proof = ref false
-let proof_counter = ref 0
 
 let start_proof s kwd =
-  in_proof := true;
-  incr proof_counter;
-  fprintf !oc "<div>";
+  fprintf !oc "<details>\n";
   space s;
-  fprintf !oc
-    "<span class=\"toggleproof\" onclick=\"toggleDisplay('proof%d')\">%s</span></div>\n"
-    !proof_counter
-    kwd;
-  fprintf !oc "<div class=\"proofscript\" id=\"proof%d\">\n" !proof_counter
+  fprintf !oc "<summary class=\"toggleproof\">%s</summary>\n" kwd;
+  fprintf !oc "<div class=\"proofscript\">\n"
 
 let end_proof kwd =
-  fprintf !oc "%s</div>\n" kwd;
+  fprintf !oc "%s</div></details>\n" kwd;
   in_proof := false
 
 (* Like Str.global_replace but don't interpret '\1' etc in replacement text *)
@@ -470,7 +464,7 @@ let process_v_file f =
   let friendly_name = if !use_short_names then base_f else module_name in
   let ic = open_in f in
   oc := open_out (Filename.concat !output_dir (module_name ^ ".html"));
-  enum_depth := 0; in_proof := false; proof_counter := 0;
+  enum_depth := 0; in_proof := false;
   start_html_page friendly_name;
   coq_bol (Lexing.from_channel ic);
   end_html_page();
