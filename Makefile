@@ -16,7 +16,7 @@ coq2html: resources.cmx coq2html.cmx
 coq2html.cmx: resources.cmx
 resources.cmx: resources.cmi
 
-RESOURCES=header footer css js redirect
+RESOURCES=header footer css redirect
 
 resources.ml: $(RESOURCES:%=coq2html.%)
 	(for i in $(RESOURCES); do \

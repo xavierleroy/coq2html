@@ -15,5 +15,4 @@
 val header : string
 val footer : string
 val css : string
-val js : string
 val redirect : string

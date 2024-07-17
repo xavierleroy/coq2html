@@ -529,7 +529,6 @@ let _ =
   end;
   List.iter process_glob_file (List.rev !glob_files);
   List.iter process_v_file (List.rev !v_files);
-  write_file Resources.js (Filename.concat !output_dir "coq2html.js");
   if !generate_css then
     write_file Resources.css (Filename.concat !output_dir "coq2html.css")
 }
