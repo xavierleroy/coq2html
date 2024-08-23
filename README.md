@@ -189,7 +189,7 @@ Lemma x:...  Proof. Admitted.   (* "Proof" must start a new line. *)
 
 - Cross-referencing (HTML links on identifiers that jump to the definition of the identifiers) is implemented for identifiers bound at the top-level of a Coq source file (by `Definition`, `Fixpoint`, `Inductive`, `Module`, `Variable`, etc), but not for identifiers bound within Coq terms (by `fun`, `match`, `forall`, etc). There is no cross-referencing for user-defined notations either.
 
-- All non-ASCII Unicode characters are treated as being parts of identifiers.  Hence, `A ⊕ B` is read as three identifiers, `A` / `⊕`, and `B`, and links are correctly added to `A` and `B` if they are bound at top-level.  However, `A⊕B` is read as a single identifier, which has no corresponding definition, therefore no link is added.
+- All non-ASCII Unicode characters are treated as being parts of identifiers.  Hence, `A ⊕ B` is read as three identifiers, `A`, `⊕`, and `B`, and links are correctly added to `A` and `B` if they are bound at top-level.  However, `A⊕B` is read as a single identifier, which has no corresponding definition, therefore no link is added.
 
 - The formatting of right-hanging documentation comments `(**r` is inflexible and not appropriate for narrow display windows or long source lines.
 
