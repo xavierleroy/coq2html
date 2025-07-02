@@ -2,27 +2,20 @@
 
 ## Overview
 
-This is a fork of coq2html
+Rocqnavi is a fork of [coq2html](https://github.com/xavierleroy/coq2html). It generates HTML documentation from Rocq files. Proof scripts are hidden by default but can be revealed by clicking ([folding in action](https://compcert.org/doc/html/compcert.common.Memory.html#Mem.valid_access_dec)).
 
-Rocqnavi is an HTML documentation generator for Rocq source files.  It is an alternative to the standard coqdoc documentation generator distributed along with Rocq.  The major feature of rocqnavi is its ability to fold proof scripts: in the generated HTML, proof scripts are initially hidden, but can be revealed one by one by clicking on the "Proof" keyword.  Here is an example of [folding in action](https://compcert.org/doc/html/compcert.common.Memory.html#Mem.valid_access_dec).
+The initial motivation for this fork it to provide a documentation tool for [MathComp-Analysis](https://github.com/math-comp/analysis).
 
-**Compatibility:** to produce cross-references, rocqnavi reads `.glob` files produced by Rocq.  The format of those files sometimes changes between major releases of Rocq, thus breaking rocqnavi.  The current version of rocqnavi is believed to be compatible with Coq 8.6 to Rocq 9.0.
+**Warning:** To produce cross-references, rocqnavi reads `.glob` files produced by Rocq. Inaccuracies in `.glob` files sometimes cause rendering issues (examples: [Rocq issue 18516](https://github.com/rocq-prover/rocq/issues/18516), [coq-elpi issue 575](https://github.com/LPCIC/coq-elpi/issues/575)). The format of `.glob` files is [documented](https://github.com/coq/coq/blob/master/interp/dumpglob.mli). `.glob` files exists since Coq 7.3 (2002-05) but their format has been changing silently between major releases of Coq; it was first documented officially in 2021.
 
 This fork extends coq2html with:
-* generation of indexes (like coqdoc)
-* clickable notations (like coqdoc)
+* generation of indexes (like `coqdoc`)
+* clickable notations (like `coqdoc`)
 * an option `-Q <dir> <coqdir>`
 * Markdown and LaTeX notations in comments
 * darkmode
 * a sidebar that displays the modules tree
 * design for mobile phone (wip)
-
-The motivation for this fork it to provide a better documentation tool for [MathComp-Analysis](https://github.com/math-comp/analysis)
-which so far has been relying on a fragile combination of coqdoc and sed scripts.
-
-**History:** coq2html was developed and originally distributed as part of the [CompCert](https://compcert.org/) project when it became clear that the coqdoc of the time was not able to format the CompCert Rocq sources the desired way.  This is the release of coq2html as a stand-alone tool, independent from CompCert.
-
-**Compatibility:** to produce cross-references, rocqnavi reads `.glob` files produced by `coqc`.  Their format is documented in [documented](https://github.com/coq/coq/blob/master/interp/dumpglob.mli).  `.glob` files exists since Coq 7.3 (2002-05) but their format has been changing silently between major releases of Coq; it was first documented officially in 2021. For this reason, rocqnavi has long been only believed to be compatible with Coq 8.6 to 8.13.
 
 ### Examples of documentation generated using this fork of coq2hml:
 
@@ -36,8 +29,6 @@ which so far has been relying on a fragile combination of coqdoc and sed scripts
 ```
           rocqnavi [options] file.glob ... file.v ...
 ```
-
-Summary of options:
 
 Option                     | Summary
 ---------------------------|----------------------------
@@ -55,15 +46,13 @@ Option                     | Summary
 
 ### Usage example
 
-Let us assume that the project [MathComp-Analysis](https://github.com/math-comp/analysis)
-is in the directory `analysis` and that coq2hml is installed in the directory `rocqnavi`
-with the following file hierarchy:
+Let us assume that the project [MathComp-Analysis](https://github.com/math-comp/analysis) is in the directory `analysis` and that the `rocqnavi` binary is installed in the directory `rocqnavi` with the following file hierarchy:
 ```tree
 .
 ├── rocqnavi/
 └── analysis/
 ```
-Then the following command generates the documentation of MathComp-Analysis:
+Then the following command generates the documentation of MathComp-Analysis [TODO: update]:
 ```console
 ../rocqnavi/rocqnavi \
   -title "MathComp-Analysis" \
