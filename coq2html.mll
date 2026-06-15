@@ -139,6 +139,14 @@ let coq_keywords = mkset [
   "using"; "with"
 ]
 
+(** Warnings *)
+
+let warn lexbuf fmt =
+  eprintf "%s: character %d: "
+    Lexing.(lexbuf.lex_start_p.pos_fname)
+    Lexing.(lexbuf.lex_start_p.pos_cnum);
+  eprintf fmt
+
 (** HTML generation *)
 
 let oc = ref stdout
@@ -240,14 +248,18 @@ let end_string () =
 
 let in_proof = ref false
 
-let start_proof s kwd =
+let start_proof s kwd lexbuf =
+  if !in_proof then
+    warn lexbuf "nested proof, formatting might be off\n";
   in_proof := true;
   fprintf !oc "<details>\n";
   space s;
   fprintf !oc "<summary class=\"toggleproof\">%s</summary>\n" kwd;
   fprintf !oc "<div class=\"proofscript\">\n"
 
-let end_proof kwd =
+let end_proof kwd lexbuf =
+  if not !in_proof then
+    warn lexbuf "'%s' without a matching 'Proof'\n" kwd;
   fprintf !oc "%s</div></details>\n" kwd;
   in_proof := false
 
@@ -278,7 +290,7 @@ let integer = ['0'-'9']+
 
 rule coq_bol = parse
   | (space* as s) (start_proof as sp)
-      { start_proof s sp;
+      { start_proof s sp lexbuf;
         skip_newline lexbuf }
   | space* "(** " ("*"+ as sect)
       { start_section sect;
@@ -308,7 +320,7 @@ and skip_newline = parse
 
 and coq = parse
   | end_proof as ep
-      { end_proof ep;
+      { end_proof ep lexbuf;
         skip_newline lexbuf }
   | "(**r "
       { start_doc_right();
@@ -467,7 +479,9 @@ let process_v_file f =
   oc := open_out (Filename.concat !output_dir (module_name ^ ".html"));
   enum_depth := 0; in_proof := false;
   start_html_page friendly_name;
-  coq_bol (Lexing.from_channel ic);
+  let lb = Lexing.from_channel ic in
+  Lexing.set_filename lb f;
+  coq_bol lb;
   end_html_page();
   close_out !oc; oc := stdout;
   close_in ic;

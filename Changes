@@ -1,3 +1,5 @@
+- Emit warnings for proofs not started with `Proof` and for nested proofs.
+
 Version 1.4, 2024-07-16
 - Recognize single quotes in identifiers.
 - Preliminary support for Unicode characters in identifiers (#2).
